@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">WallpaperApp</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="sample_desc">Thanks Michell, I created an Images folder in my project, inside of it there is a png image Black_x.png, So what should be the path here to decode image, it should be Images Black_x.png ?</string>
+</resources>
