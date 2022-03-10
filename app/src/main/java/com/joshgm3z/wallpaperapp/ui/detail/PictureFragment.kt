@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.isVisible
 import com.joshgm3z.wallpaperapp.R
 import com.joshgm3z.wallpaperapp.domain.data.Picture
 
@@ -28,13 +30,27 @@ class PictureFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        return initUI(inflater, container)
+    }
+
+    private fun initUI(inflater: LayoutInflater, container: ViewGroup?): View? {
         val view = inflater.inflate(
             R.layout.fragment_picture,
             container,
             false
         )
+        val ll: LinearLayout = view.findViewById(R.id.ll_desc)
+        ll.visibility = View.VISIBLE
+
         val iv: ImageView = view.findViewById(R.id.iv_picture)
         iv.setImageResource(picture.res)
+        iv.setOnClickListener {
+            if (ll.isVisible)
+                ll.visibility = View.GONE
+            else
+                ll.visibility = View.VISIBLE
+        }
+
         val tv: TextView = view.findViewById(R.id.tv_desc)
         tv.text = picture.description
         return view
