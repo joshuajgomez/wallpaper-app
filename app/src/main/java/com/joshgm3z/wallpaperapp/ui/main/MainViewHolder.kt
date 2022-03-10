@@ -1,4 +1,4 @@
-package com.joshgm3z.wallpaperapp.ui
+package com.joshgm3z.wallpaperapp.ui.main
 
 import android.view.View
 import android.widget.ImageView
@@ -18,7 +18,7 @@ class MainViewHolder(itemView: View, val callback: ClickListener) :
 
     fun setData(picture: Picture) {
         this.picture = picture
-        ivPicture.setImageResource(picture.res)
+//        ivPicture.setImageResource(picture.res)
     }
 
     override fun onClick(view: View?) {

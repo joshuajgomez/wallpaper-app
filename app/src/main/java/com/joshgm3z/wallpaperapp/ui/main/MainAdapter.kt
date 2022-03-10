@@ -1,4 +1,4 @@
-package com.joshgm3z.wallpaperapp.ui
+package com.joshgm3z.wallpaperapp.ui.main
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

@@ -1,4 +1,4 @@
-package com.joshgm3z.wallpaperapp.ui
+package com.joshgm3z.wallpaperapp.ui.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +9,6 @@ class MainViewModel : ViewModel() {
 
     private val repo: PictureRepository = PictureRepository()
 
-    var pictureList: List<Picture> = repo.getSamplePictures()
+    var pictureList: List<Picture> = ArrayList()
 
 }

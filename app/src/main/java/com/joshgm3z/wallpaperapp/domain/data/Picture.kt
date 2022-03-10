@@ -4,22 +4,23 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class Picture(
-    val url: String?,
-    val id: String?,
-    val res: Int,
-    val description: String?,
-): Parcelable {
-    constructor(parcel: Parcel) :this(
+    var dateAdded: Long,
+    var url: String?,
+    var description: String?,
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readLong(),
         parcel.readString(),
-        parcel.readString(),
-        parcel.readInt(),
         parcel.readString(),
     )
 
+    constructor() : this(
+        0, "", ""
+    )
+
     override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeLong(dateAdded)
         parcel.writeString(url)
-        parcel.writeString(id)
-        parcel.writeInt(res)
         parcel.writeString(description)
     }
 

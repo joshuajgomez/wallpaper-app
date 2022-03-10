@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "293938740886",
+    "project_id": "wallpaper-app-df848",
+    "storage_bucket": "wallpaper-app-df848.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:293938740886:android:8bfdd102368add3674ccb7",
+        "android_client_info": {
+          "package_name": "com.joshgm3z.wallpaperapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "293938740886-fp9uerv8fail0ecnbjsssn73ukndtu51.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-o28fynqfjuIZlCqEROxVWmaP0LECqWQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "293938740886-fp9uerv8fail0ecnbjsssn73ukndtu51.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

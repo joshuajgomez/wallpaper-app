@@ -43,7 +43,7 @@ class PictureFragment : Fragment() {
         ll.visibility = View.VISIBLE
 
         val iv: ImageView = view.findViewById(R.id.iv_picture)
-        iv.setImageResource(picture.res)
+//        iv.setImageResource(picture.res)
         iv.setOnClickListener {
             if (ll.isVisible)
                 ll.visibility = View.GONE
