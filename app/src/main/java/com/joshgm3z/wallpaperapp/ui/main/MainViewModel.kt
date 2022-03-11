@@ -1,14 +1,24 @@
 package com.joshgm3z.wallpaperapp.ui.main
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.joshgm3z.wallpaperapp.domain.PictureRepository
 import com.joshgm3z.wallpaperapp.domain.data.Picture
+import java.io.File
 
-class MainViewModel : ViewModel() {
+class MainViewModel(val callback: UiListener) : ViewModel(), PictureRepository.PictureDownloadListener {
 
     private val repo: PictureRepository = PictureRepository()
 
-    var pictureList: List<Picture> = ArrayList()
+    init {
+        repo.getPictures(this)
+    }
+
+    override fun onDownloadComplete(list: ArrayList<Picture>) {
+        callback.showData(list)
+    }
+
+    interface UiListener {
+        fun showData(list: ArrayList<Picture>)
+    }
 
 }

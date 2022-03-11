@@ -1,12 +1,12 @@
 package com.joshgm3z.wallpaperapp.domain
 
 import android.net.Uri
-import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.joshgm3z.wallpaperapp.domain.data.Picture
 import com.joshgm3z.wallpaperapp.util.Const
+import com.joshgm3z.wallpaperapp.util.ProgressUtil
 import java.util.*
 
 class UploadHandler {
@@ -15,22 +15,22 @@ class UploadHandler {
         this.callback = callback
         val storageInstance = FirebaseStorage.getInstance()
         val storageReference = storageInstance.reference
-
-        val fileName = storageReference.child(
-            "pictures/" + UUID.randomUUID().toString()
+        val fileName = UUID.randomUUID().toString() + ".jpg"
+        val serverFilePath = storageReference.child(
+            "pictures/$fileName"
         )
 
-        fileName.putFile(filePath)
+        serverFilePath.putFile(filePath)
             .addOnProgressListener {
-                val progress: Double =
-                    (100.0 * it.bytesTransferred / it.totalByteCount)
-                callback.onProgressUpdate(progress.toInt())
+                val progress: Int = ProgressUtil.getProgress(it.bytesTransferred, it.totalByteCount)
+                callback.onProgressUpdate(progress)
             }
             .addOnSuccessListener {
                 val picture = Picture()
                 picture.description = desc
-                picture.url = fileName.path
+                picture.url = serverFilePath.path
                 picture.dateAdded = System.currentTimeMillis()
+                picture.name = fileName
                 uploadPictureInfo(picture)
             }
             .addOnFailureListener {

@@ -2,7 +2,6 @@ package com.joshgm3z.wallpaperapp
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -14,15 +13,14 @@ import com.joshgm3z.wallpaperapp.ui.main.MainViewHolder
 import com.joshgm3z.wallpaperapp.ui.main.MainViewModel
 
 
-class MainActivity : AppCompatActivity(), MainViewHolder.ClickListener {
+class MainActivity : AppCompatActivity(), MainViewHolder.ClickListener, MainViewModel.UiListener {
 
     private var mainAdapter: MainAdapter = MainAdapter(this)
-    private val mainViewModel = MainViewModel()
+    private val mainViewModel = MainViewModel(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         initUI()
     }
 
@@ -30,8 +28,6 @@ class MainActivity : AppCompatActivity(), MainViewHolder.ClickListener {
         val recyclerView: RecyclerView = findViewById(R.id.rv_picture_list)
         recyclerView.layoutManager = GridLayoutManager(this, SPAN_COUNT)
         recyclerView.adapter = mainAdapter
-
-        mainAdapter.setPictureList(mainViewModel.pictureList)
 
         val ivUploadBtn: ImageView = findViewById(R.id.ic_upload)
         ivUploadBtn.setOnClickListener {
@@ -66,5 +62,9 @@ class MainActivity : AppCompatActivity(), MainViewHolder.ClickListener {
             val imageUri = data?.data
             UploadActivity.start(this, imageUri)
         }
+    }
+
+    override fun showData(list: ArrayList<Picture>) {
+        mainAdapter.setPictureList(list)
     }
 }

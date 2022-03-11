@@ -1,10 +1,16 @@
 package com.joshgm3z.wallpaperapp.ui.main
 
+import android.net.Uri
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import com.joshgm3z.wallpaperapp.R
 import com.joshgm3z.wallpaperapp.domain.data.Picture
+import com.joshgm3z.wallpaperapp.util.FileUtil
 
 class MainViewHolder(itemView: View, val callback: ClickListener) :
     RecyclerView.ViewHolder(itemView), View.OnClickListener {
@@ -16,9 +22,14 @@ class MainViewHolder(itemView: View, val callback: ClickListener) :
         itemView.setOnClickListener(this)
     }
 
-    fun setData(picture: Picture) {
+    fun loadPicture(picture: Picture) {
         this.picture = picture
-//        ivPicture.setImageResource(picture.res)
+        val storageReference = FirebaseStorage.getInstance().reference
+        val child = storageReference.child(picture.url!!)
+
+        Glide.with(itemView)
+            .load(child)
+            .into(ivPicture)
     }
 
     override fun onClick(view: View?) {

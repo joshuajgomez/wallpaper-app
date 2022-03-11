@@ -7,21 +7,24 @@ data class Picture(
     var dateAdded: Long,
     var url: String?,
     var description: String?,
+    var name: String?,
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readLong(),
         parcel.readString(),
         parcel.readString(),
+        parcel.readString(),
     )
 
     constructor() : this(
-        0, "", ""
+        0, "", "", ""
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeLong(dateAdded)
         parcel.writeString(url)
         parcel.writeString(description)
+        parcel.writeString(name)
     }
 
     override fun describeContents(): Int {

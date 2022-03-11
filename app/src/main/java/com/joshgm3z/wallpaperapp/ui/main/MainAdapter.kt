@@ -23,7 +23,7 @@ class MainAdapter(val callback: MainViewHolder.ClickListener) :
     }
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
-        holder.setData(pictureList!![position])
+        holder.loadPicture(pictureList!![position])
     }
 
     override fun getItemCount(): Int {

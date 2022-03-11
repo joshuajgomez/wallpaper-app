@@ -9,6 +9,9 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
+import com.bumptech.glide.Glide
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import com.joshgm3z.wallpaperapp.R
 import com.joshgm3z.wallpaperapp.domain.data.Picture
 
@@ -27,7 +30,7 @@ class PictureFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
         return initUI(inflater, container)
@@ -42,8 +45,13 @@ class PictureFragment : Fragment() {
         val ll: LinearLayout = view.findViewById(R.id.ll_desc)
         ll.visibility = View.VISIBLE
 
+        val reference = FirebaseStorage.getInstance().reference
+        val child = reference.child(picture.url!!)
         val iv: ImageView = view.findViewById(R.id.iv_picture)
-//        iv.setImageResource(picture.res)
+        Glide.with(view)
+            .load(child)
+            .into(iv)
+
         iv.setOnClickListener {
             if (ll.isVisible)
                 ll.visibility = View.GONE
