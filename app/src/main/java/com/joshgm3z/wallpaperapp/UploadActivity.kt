@@ -48,6 +48,9 @@ class UploadActivity : AppCompatActivity(), UploadViewModel.UploadProgressListen
             val textDescription = etDesc.text.trim()
             if (textDescription.isNotEmpty() && uri != null) {
                 pbUpload.visibility = View.VISIBLE
+                btnUpload.isEnabled = false
+                etDesc.isEnabled = false
+                ivBack.isEnabled = false
                 uploadViewModel.onUploadClick(uri, textDescription.toString(), this)
             }
         }

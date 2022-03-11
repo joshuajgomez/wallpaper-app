@@ -1,19 +1,20 @@
 package com.joshgm3z.wallpaperapp.ui.detail
 
+import android.content.ContentResolver
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
+import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.joshgm3z.wallpaperapp.R
 import com.joshgm3z.wallpaperapp.domain.data.Picture
+
 
 private const val ARG_PARAM = "param_picture"
 
@@ -52,16 +53,40 @@ class PictureFragment : Fragment() {
             .load(child)
             .into(iv)
 
+        val ivBack: ImageView = view.findViewById(R.id.iv_back_btn)
+        ivBack.setOnClickListener {
+            requireActivity().fragmentManager.popBackStack();
+        }
+
         iv.setOnClickListener {
-            if (ll.isVisible)
+            if (ll.isVisible) {
                 ll.visibility = View.GONE
-            else
+                ivBack.visibility = View.INVISIBLE
+            } else {
                 ll.visibility = View.VISIBLE
+                ivBack.visibility = View.VISIBLE
+            }
         }
 
         val tv: TextView = view.findViewById(R.id.tv_desc)
         tv.text = picture.description
+
+        val btnDownload: Button = view.findViewById(R.id.btn_download)
+        btnDownload.setOnClickListener {
+            downloadImageToGallery(iv)
+        }
         return view
+    }
+
+    private fun downloadImageToGallery(iv: ImageView) {
+        MediaStore.Images.Media.insertImage(getContentResolver(),
+            iv.drawToBitmap(),
+            picture.name,
+            picture.description);
+    }
+
+    private fun getContentResolver(): ContentResolver {
+        return requireContext().contentResolver
     }
 
     companion object {
