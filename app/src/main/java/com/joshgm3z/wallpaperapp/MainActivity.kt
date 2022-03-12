@@ -1,7 +1,12 @@
 package com.joshgm3z.wallpaperapp
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Bitmap.CompressFormat
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -11,17 +16,28 @@ import com.joshgm3z.wallpaperapp.ui.detail.PictureFragment
 import com.joshgm3z.wallpaperapp.ui.main.MainAdapter
 import com.joshgm3z.wallpaperapp.ui.main.MainViewHolder
 import com.joshgm3z.wallpaperapp.ui.main.MainViewModel
+import com.joshgm3z.wallpaperapp.ui.main.UploadOptionsDialog
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
 
 
-class MainActivity : AppCompatActivity(), MainViewHolder.ClickListener, MainViewModel.UiListener {
+class MainActivity : AppCompatActivity(), MainViewHolder.ClickListener, MainViewModel.UiListener,
+    UploadOptionsDialog.UploadDialogListener {
 
     private var mainAdapter: MainAdapter = MainAdapter(this)
-    private val mainViewModel = MainViewModel(this)
+
+    private val REQUEST_GALLERY_IMAGE = 1
+    private val REQUEST_IMAGE_CAPTURE = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initUI()
+
+        MainViewModel(this)
     }
 
     private fun initUI() {
@@ -31,7 +47,8 @@ class MainActivity : AppCompatActivity(), MainViewHolder.ClickListener, MainView
 
         val ivUploadBtn: ImageView = findViewById(R.id.ic_upload)
         ivUploadBtn.setOnClickListener {
-            openGallery()
+            UploadOptionsDialog(this)
+                .show(supportFragmentManager, UploadOptionsDialog.TAG)
         }
     }
 
@@ -48,23 +65,51 @@ class MainActivity : AppCompatActivity(), MainViewHolder.ClickListener, MainView
             .commit()
     }
 
-    val GALLERY_IMAGE_REQUEST = 1
-
-    fun openGallery() {
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = "image/*"
-        startActivityForResult(intent, GALLERY_IMAGE_REQUEST)
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK && requestCode == GALLERY_IMAGE_REQUEST) {
-            val imageUri = data?.data
-            UploadActivity.start(this, imageUri)
+        if (resultCode == RESULT_OK) {
+            var imageUri: Uri? = null
+            if (requestCode == REQUEST_GALLERY_IMAGE) {
+                imageUri = data?.data!!
+            } else if (requestCode == REQUEST_IMAGE_CAPTURE) {
+                val imageBitmap = data!!.extras!!.get("data") as Bitmap
+                imageUri = getUriFromBitmap(imageBitmap)
+            }
+            UploadActivity.start(this, imageUri!!)
         }
+    }
+
+    private fun getUriFromBitmap(imageBitmap: Bitmap): Uri {
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val storageDir: File = getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
+        val file = File.createTempFile(
+            "JPEG_${timeStamp}_", /* prefix */
+            ".jpg", /* suffix */
+            storageDir /* directory */
+        )
+        val bos = ByteArrayOutputStream()
+        imageBitmap.compress(CompressFormat.JPEG, 100, bos);
+        val bitmapData: ByteArray = bos.toByteArray()
+        val fos = FileOutputStream(file)
+        fos.write(bitmapData)
+        fos.flush()
+        fos.close()
+        return Uri.fromFile(file)
     }
 
     override fun showData(list: ArrayList<Picture>) {
         mainAdapter.setPictureList(list)
     }
+
+    override fun onOpenGalleryClick() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, REQUEST_GALLERY_IMAGE)
+    }
+
+    override fun onOpenCameraClick() {
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+    }
+
 }

@@ -2,6 +2,7 @@ package com.joshgm3z.wallpaperapp
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -32,8 +33,10 @@ class UploadActivity : AppCompatActivity(), UploadViewModel.UploadProgressListen
         if (intent.hasExtra(EXTRA_IMAGE_URI)) {
             val stringUri = intent.getStringExtra(EXTRA_IMAGE_URI)
             uri = Uri.parse(stringUri)
-
             ivPicture.setImageURI(uri)
+        } else if(intent.hasExtra(EXTRA_IMAGE_BITMAP)) {
+            val imageBitmap = intent.getParcelableExtra<Bitmap>(EXTRA_IMAGE_BITMAP)
+            ivPicture.setImageBitmap(imageBitmap)
         }
         val ivBack: ImageView = findViewById(R.id.iv_back_btn)
         ivBack.setOnClickListener {
@@ -58,10 +61,18 @@ class UploadActivity : AppCompatActivity(), UploadViewModel.UploadProgressListen
 
     companion object {
         private const val EXTRA_IMAGE_URI: String = "EXTRA_IMAGE_URI"
+        private const val EXTRA_IMAGE_BITMAP: String = "EXTRA_IMAGE_BITMAP"
 
-        fun start(context: Context, imageUri: Uri?) {
+        fun start(context: Context, imageUri: Uri) {
             val intent = Intent(context, UploadActivity::class.java).apply {
                 putExtra(EXTRA_IMAGE_URI, imageUri.toString())
+            }
+            context.startActivity(intent)
+        }
+
+        fun start(context: Context, bitmap: Bitmap) {
+            val intent = Intent(context, UploadActivity::class.java).apply {
+                putExtra(EXTRA_IMAGE_BITMAP, bitmap)
             }
             context.startActivity(intent)
         }

@@ -5,7 +5,7 @@ import com.joshgm3z.wallpaperapp.domain.PictureRepository
 import com.joshgm3z.wallpaperapp.domain.data.Picture
 import java.io.File
 
-class MainViewModel(val callback: UiListener) : ViewModel(), PictureRepository.PictureDownloadListener {
+class MainViewModel(private val callback: UiListener) : ViewModel(), PictureRepository.PictureDownloadListener {
 
     private val repo: PictureRepository = PictureRepository()
 

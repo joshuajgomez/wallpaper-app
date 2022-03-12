@@ -55,7 +55,7 @@ class PictureFragment : Fragment() {
 
         val ivBack: ImageView = view.findViewById(R.id.iv_back_btn)
         ivBack.setOnClickListener {
-            requireActivity().fragmentManager.popBackStack();
+            requireActivity().supportFragmentManager.popBackStack()
         }
 
         iv.setOnClickListener {
