@@ -17,6 +17,7 @@ import com.joshgm3z.wallpaperapp.ui.main.MainAdapter
 import com.joshgm3z.wallpaperapp.ui.main.MainViewHolder
 import com.joshgm3z.wallpaperapp.ui.main.MainViewModel
 import com.joshgm3z.wallpaperapp.ui.main.UploadOptionsDialog
+import com.joshgm3z.wallpaperapp.util.FbLogging
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -34,10 +35,32 @@ class MainActivity : AppCompatActivity(), MainViewHolder.ClickListener, MainView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FbLogging(this).logEntry()
+
         setContentView(R.layout.activity_main)
         initUI()
 
         MainViewModel(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        FbLogging(this).logEntry()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        FbLogging(this).logEntry()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        FbLogging(this).logEntry()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        FbLogging(this).logEntry()
     }
 
     private fun initUI() {
@@ -67,6 +90,7 @@ class MainActivity : AppCompatActivity(), MainViewHolder.ClickListener, MainView
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        FbLogging(this).logEntry()
         if (resultCode == RESULT_OK) {
             var imageUri: Uri? = null
             if (requestCode == REQUEST_GALLERY_IMAGE) {
@@ -102,12 +126,14 @@ class MainActivity : AppCompatActivity(), MainViewHolder.ClickListener, MainView
     }
 
     override fun onOpenGalleryClick() {
+        FbLogging(this).logEvent(FbLogging.CLICK_ACTION)
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
         startActivityForResult(intent, REQUEST_GALLERY_IMAGE)
     }
 
     override fun onOpenCameraClick() {
+        FbLogging(this).logEvent(FbLogging.CLICK_ACTION)
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
     }

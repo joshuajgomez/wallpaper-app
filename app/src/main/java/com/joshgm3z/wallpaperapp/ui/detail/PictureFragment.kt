@@ -17,6 +17,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.joshgm3z.wallpaperapp.R
 import com.joshgm3z.wallpaperapp.domain.data.Picture
 import com.joshgm3z.wallpaperapp.util.DateUtil
+import com.joshgm3z.wallpaperapp.util.FbLogging
 
 
 private const val ARG_PARAM = "param_picture"
@@ -37,6 +38,7 @@ class PictureFragment : Fragment(), SetWallpaperDialog.SetWallpaperDialogListene
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
+        FbLogging(requireContext()).logEntry()
         // Inflate the layout for this fragment
         return initUI(inflater, container)
     }
@@ -77,11 +79,13 @@ class PictureFragment : Fragment(), SetWallpaperDialog.SetWallpaperDialogListene
 
         val llDownload: LinearLayout = view.findViewById(R.id.ll_download)
         llDownload.setOnClickListener {
+            FbLogging(requireContext()).logEvent(FbLogging.BUTTON_CLICK)
             downloadImageToGallery(ivPicture)
             showNotification("Downloaded to Gallery")
         }
         val llSetWallpaper: LinearLayout = view.findViewById(R.id.ll_set_wallpaper)
         llSetWallpaper.setOnClickListener {
+            FbLogging(requireContext()).logEvent(FbLogging.BUTTON_CLICK)
             SetWallpaperDialog(this).show(childFragmentManager, "")
         }
 
@@ -95,7 +99,9 @@ class PictureFragment : Fragment(), SetWallpaperDialog.SetWallpaperDialogListene
         MediaStore.Images.Media.insertImage(getContentResolver(),
             iv.drawToBitmap(),
             picture.name,
-            picture.description);
+            picture.description)
+        FbLogging(requireContext()).logEvent(FbLogging.DOWNLOAD_WALLPAPER)
+
     }
 
     private fun showNotification(message: String) {
@@ -117,9 +123,31 @@ class PictureFragment : Fragment(), SetWallpaperDialog.SetWallpaperDialogListene
             }
     }
 
+    override fun onResume() {
+        super.onResume()
+        FbLogging(requireContext()).logEntry()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        FbLogging(requireContext()).logEntry()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        FbLogging(requireContext()).logEntry()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        FbLogging(requireContext()).logEntry()
+    }
+
     override fun onOkPress() {
+        FbLogging(requireContext()).logEntry()
         val wm = WallpaperManager.getInstance(context)
         wm.setBitmap(ivPicture.drawToBitmap())
+        FbLogging(requireContext()).logEvent(FbLogging.SET_WALLPAPER)
         showNotification("Wallpaper set")
     }
 }

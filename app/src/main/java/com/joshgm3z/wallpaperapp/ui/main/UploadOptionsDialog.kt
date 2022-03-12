@@ -5,6 +5,7 @@ import android.view.*
 import android.widget.RelativeLayout
 import androidx.fragment.app.DialogFragment
 import com.joshgm3z.wallpaperapp.R
+import com.joshgm3z.wallpaperapp.util.FbLogging
 
 
 class UploadOptionsDialog(private val callback: UploadDialogListener) : DialogFragment() {
@@ -18,14 +19,17 @@ class UploadOptionsDialog(private val callback: UploadDialogListener) : DialogFr
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
+        FbLogging(requireContext()).logEntry()
         val view = inflater.inflate(R.layout.dialog_fragment_upload, container, false)
         val rlOpenGallery: RelativeLayout = view.findViewById(R.id.rl_open_gallery)
         rlOpenGallery.setOnClickListener {
+            FbLogging(requireContext()).logEntry()
             callback.onOpenGalleryClick()
             dismiss()
         }
         val rlOpenCamera: RelativeLayout = view.findViewById(R.id.rl_open_camera)
         rlOpenCamera.setOnClickListener {
+            FbLogging(requireContext()).logEntry()
             callback.onOpenCameraClick()
             dismiss()
         }

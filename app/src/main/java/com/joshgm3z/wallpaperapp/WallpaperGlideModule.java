@@ -8,6 +8,7 @@ import com.bumptech.glide.annotation.GlideModule;
 import com.bumptech.glide.module.AppGlideModule;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.storage.StorageReference;
+import com.joshgm3z.wallpaperapp.util.FbLogging;
 
 import java.io.InputStream;
 

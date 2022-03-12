@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
 import com.joshgm3z.wallpaperapp.ui.upload.UploadViewModel
+import com.joshgm3z.wallpaperapp.util.FbLogging
 
 class UploadActivity : AppCompatActivity(), UploadViewModel.UploadProgressListener {
 
@@ -21,6 +22,7 @@ class UploadActivity : AppCompatActivity(), UploadViewModel.UploadProgressListen
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FbLogging(this).logEntry()
         setContentView(R.layout.activity_upload)
 
         initUI()
@@ -34,9 +36,6 @@ class UploadActivity : AppCompatActivity(), UploadViewModel.UploadProgressListen
             val stringUri = intent.getStringExtra(EXTRA_IMAGE_URI)
             uri = Uri.parse(stringUri)
             ivPicture.setImageURI(uri)
-        } else if(intent.hasExtra(EXTRA_IMAGE_BITMAP)) {
-            val imageBitmap = intent.getParcelableExtra<Bitmap>(EXTRA_IMAGE_BITMAP)
-            ivPicture.setImageBitmap(imageBitmap)
         }
         val ivBack: ImageView = findViewById(R.id.iv_back_btn)
         ivBack.setOnClickListener {
@@ -55,13 +54,33 @@ class UploadActivity : AppCompatActivity(), UploadViewModel.UploadProgressListen
                 etDesc.isEnabled = false
                 ivBack.isEnabled = false
                 uploadViewModel.onUploadClick(uri, textDescription.toString(), this)
+                FbLogging(this).logEvent(FbLogging.UPLOAD_WALLPAPER)
             }
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        FbLogging(this).logEntry()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        FbLogging(this).logEntry()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        FbLogging(this).logEntry()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        FbLogging(this).logEntry()
+    }
+
     companion object {
         private const val EXTRA_IMAGE_URI: String = "EXTRA_IMAGE_URI"
-        private const val EXTRA_IMAGE_BITMAP: String = "EXTRA_IMAGE_BITMAP"
 
         fun start(context: Context, imageUri: Uri) {
             val intent = Intent(context, UploadActivity::class.java).apply {
@@ -69,28 +88,25 @@ class UploadActivity : AppCompatActivity(), UploadViewModel.UploadProgressListen
             }
             context.startActivity(intent)
         }
-
-        fun start(context: Context, bitmap: Bitmap) {
-            val intent = Intent(context, UploadActivity::class.java).apply {
-                putExtra(EXTRA_IMAGE_BITMAP, bitmap)
-            }
-            context.startActivity(intent)
-        }
     }
 
     override fun onProgressUpdate(progress: Int) {
+        FbLogging(this).logInfo(progress.toString())
         pbUpload.progress = progress
         Log.println(Log.ASSERT, "uploadActivity", "progress: $progress")
     }
 
     override fun onSuccess() {
+        FbLogging(this).logEntry()
         pbUpload.visibility = View.INVISIBLE
         Log.println(Log.ASSERT, "uploadActivity", "success")
         finish()
     }
 
     override fun onFail(message: String) {
+        FbLogging(this).logInfo(message)
         pbUpload.visibility = View.INVISIBLE
         Log.println(Log.ASSERT, "uploadActivity", "fail: $message")
+        FbLogging(this).logEvent(FbLogging.ERROR)
     }
 }
