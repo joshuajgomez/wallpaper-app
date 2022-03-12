@@ -1,6 +1,7 @@
 package com.joshgm3z.wallpaperapp.ui.detail
 
 import android.content.ContentResolver
+import android.graphics.Color
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.storage.FirebaseStorage
 import com.joshgm3z.wallpaperapp.R
 import com.joshgm3z.wallpaperapp.domain.data.Picture
@@ -71,9 +73,14 @@ class PictureFragment : Fragment() {
         val tv: TextView = view.findViewById(R.id.tv_desc)
         tv.text = picture.description
 
-        val btnDownload: Button = view.findViewById(R.id.btn_download)
-        btnDownload.setOnClickListener {
+        val llDownload: LinearLayout = view.findViewById(R.id.ll_download)
+        llDownload.setOnClickListener {
             downloadImageToGallery(iv)
+            showDownloadNotification(view)
+        }
+        val llSetWallpaper: LinearLayout = view.findViewById(R.id.ll_set_wallpaper)
+        llSetWallpaper.setOnClickListener {
+            Toast.makeText(context, "Feature coming soon", Toast.LENGTH_SHORT).show()
         }
         return view
     }
@@ -83,6 +90,10 @@ class PictureFragment : Fragment() {
             iv.drawToBitmap(),
             picture.name,
             picture.description);
+    }
+
+    private fun showDownloadNotification(view: View) {
+        Snackbar.make(view, "Downloaded to Gallery", Snackbar.LENGTH_SHORT).show()
     }
 
     private fun getContentResolver(): ContentResolver {
