@@ -16,6 +16,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.storage.FirebaseStorage
 import com.joshgm3z.wallpaperapp.R
 import com.joshgm3z.wallpaperapp.domain.data.Picture
+import com.joshgm3z.wallpaperapp.util.DateUtil
 
 
 private const val ARG_PARAM = "param_picture"
@@ -82,6 +83,10 @@ class PictureFragment : Fragment() {
         llSetWallpaper.setOnClickListener {
             Toast.makeText(context, "Feature coming soon", Toast.LENGTH_SHORT).show()
         }
+
+        val tvDate: TextView = view.findViewById(R.id.tv_date)
+        val textDate: String = DateUtil.getTextDate(picture.dateAdded)
+        tvDate.text = "added on $textDate"
         return view
     }
 
