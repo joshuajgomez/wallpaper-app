@@ -1,7 +1,7 @@
 package com.joshgm3z.wallpaperapp.ui.detail
 
+import android.app.WallpaperManager
 import android.content.ContentResolver
-import android.graphics.Color
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
@@ -77,11 +77,13 @@ class PictureFragment : Fragment() {
         val llDownload: LinearLayout = view.findViewById(R.id.ll_download)
         llDownload.setOnClickListener {
             downloadImageToGallery(iv)
-            showDownloadNotification(view)
+            showNotification("Downloaded to Gallery", view)
         }
         val llSetWallpaper: LinearLayout = view.findViewById(R.id.ll_set_wallpaper)
         llSetWallpaper.setOnClickListener {
-            Toast.makeText(context, "Feature coming soon", Toast.LENGTH_SHORT).show()
+            val wm = WallpaperManager.getInstance(context)
+            wm.setBitmap(iv.drawToBitmap())
+            showNotification("Wallpaper set", view)
         }
 
         val tvDate: TextView = view.findViewById(R.id.tv_date)
@@ -97,8 +99,8 @@ class PictureFragment : Fragment() {
             picture.description);
     }
 
-    private fun showDownloadNotification(view: View) {
-        Snackbar.make(view, "Downloaded to Gallery", Snackbar.LENGTH_SHORT).show()
+    private fun showNotification(message: String, view: View) {
+        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun getContentResolver(): ContentResolver {
