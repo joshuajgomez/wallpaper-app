@@ -21,9 +21,10 @@ import com.joshgm3z.wallpaperapp.util.DateUtil
 
 private const val ARG_PARAM = "param_picture"
 
-class PictureFragment : Fragment() {
+class PictureFragment : Fragment(), SetWallpaperDialog.SetWallpaperDialogListener {
 
     private lateinit var picture: Picture
+    private lateinit var ivPicture: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,17 +52,17 @@ class PictureFragment : Fragment() {
 
         val reference = FirebaseStorage.getInstance().reference
         val child = reference.child(picture.url!!)
-        val iv: ImageView = view.findViewById(R.id.iv_picture)
+        ivPicture = view.findViewById(R.id.iv_picture)
         Glide.with(view)
             .load(child)
-            .into(iv)
+            .into(ivPicture)
 
         val ivBack: ImageView = view.findViewById(R.id.iv_back_btn)
         ivBack.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
         }
 
-        iv.setOnClickListener {
+        ivPicture.setOnClickListener {
             if (ll.isVisible) {
                 ll.visibility = View.GONE
                 ivBack.visibility = View.INVISIBLE
@@ -76,14 +77,12 @@ class PictureFragment : Fragment() {
 
         val llDownload: LinearLayout = view.findViewById(R.id.ll_download)
         llDownload.setOnClickListener {
-            downloadImageToGallery(iv)
-            showNotification("Downloaded to Gallery", view)
+            downloadImageToGallery(ivPicture)
+            showNotification("Downloaded to Gallery")
         }
         val llSetWallpaper: LinearLayout = view.findViewById(R.id.ll_set_wallpaper)
         llSetWallpaper.setOnClickListener {
-            val wm = WallpaperManager.getInstance(context)
-            wm.setBitmap(iv.drawToBitmap())
-            showNotification("Wallpaper set", view)
+            SetWallpaperDialog(this).show(childFragmentManager, "")
         }
 
         val tvDate: TextView = view.findViewById(R.id.tv_date)
@@ -99,8 +98,8 @@ class PictureFragment : Fragment() {
             picture.description);
     }
 
-    private fun showNotification(message: String, view: View) {
-        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show()
+    private fun showNotification(message: String) {
+        Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun getContentResolver(): ContentResolver {
@@ -116,5 +115,11 @@ class PictureFragment : Fragment() {
                     putParcelable(ARG_PARAM, picture)
                 }
             }
+    }
+
+    override fun onOkPress() {
+        val wm = WallpaperManager.getInstance(context)
+        wm.setBitmap(ivPicture.drawToBitmap())
+        showNotification("Wallpaper set")
     }
 }
